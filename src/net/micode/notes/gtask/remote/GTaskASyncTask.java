@@ -64,21 +64,26 @@ public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
     }
 
     private void showNotification(int tickerId, String content) {
-        Notification notification = new Notification(R.drawable.notification, mContext
-                .getString(tickerId), System.currentTimeMillis());
-        notification.defaults = Notification.DEFAULT_LIGHTS;
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
         PendingIntent pendingIntent;
         if (tickerId != R.string.ticker_success) {
             pendingIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                    NotesPreferenceActivity.class), 0);
+                    NotesPreferenceActivity.class), PendingIntent.FLAG_IMMUTABLE);
 
         } else {
             pendingIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                    NotesListActivity.class), 0);
+                    NotesListActivity.class), PendingIntent.FLAG_IMMUTABLE);
         }
-        notification.setLatestEventInfo(mContext, mContext.getString(R.string.app_name), content,
-                pendingIntent);
+        // setLatestEventInfo() 自 API 23 起被移除，改用 Notification.Builder 链式构建
+        Notification notification = new Notification.Builder(mContext)
+                .setSmallIcon(R.drawable.notification)
+                .setTicker(mContext.getString(tickerId))
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(mContext.getString(R.string.app_name))
+                .setContentText(content)
+                .setContentIntent(pendingIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS)
+                .setAutoCancel(true)
+                .build();
         mNotifiManager.notify(GTASK_SYNC_NOTIFICATION_ID, notification);
     }
 

@@ -63,7 +63,10 @@
     </style>
 
     <style name="NoteActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <!-- 原值为 gone：2012 年设计依赖实体 MENU 键调出选项菜单。
+             现代设备无实体键，菜单入口全部不可达，故恢复为 visible，
+             使字号、分享、删除、提醒、新建文件夹等入口重新可用。 -->
         <item name="android:displayOptions" />
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">visible</item>
     </style>
 </resources>
